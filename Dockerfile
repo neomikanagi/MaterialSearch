@@ -1,13 +1,9 @@
-# 使用 Debian 最新版本作为基础镜像
+# 使用官方 Debian 作为基础镜像
 FROM debian:latest
 
-# 更新系统并安装 Cockpit
+# 更新系统并安装 Cockpit 和其他依赖
 RUN apt-get update && \
-    apt-get install -y cockpit && \
-    systemctl enable --now cockpit.socket
+    apt-get install -y cockpit sudo dbus
 
-# 清理不必要的文件
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# 启动 systemd
-CMD ["/sbin/init"]
+# 替代 systemd，直接启动 cockpit
+CMD ["cockpit-ws", "--no-tls"]
