@@ -1,13 +1,13 @@
-# 使用最新的 Arch Linux 作为基础镜像
-FROM archlinux:latest
+# 使用 Debian 最新版本作为基础镜像
+FROM debian:latest
 
-# 更新系统并安装 cockpit
-RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm cockpit && \
+# 更新系统并安装 Cockpit
+RUN apt-get update && \
+    apt-get install -y cockpit && \
     systemctl enable --now cockpit.socket
 
-# 清理缓存以减少镜像大小
-RUN pacman -Scc --noconfirm
+# 清理不必要的文件
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# 设置默认命令
-CMD ["/usr/bin/bash"]
+# 启动 systemd
+CMD ["/sbin/init"]
