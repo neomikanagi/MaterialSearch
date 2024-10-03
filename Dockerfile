@@ -1,11 +1,13 @@
-# 使用精简版 Debian 作为基础镜像
-FROM debian:stable-slim
+FROM debian:bullseye-slim
 
-# 更新系统并安装 Cockpit 和其他依赖
+# 安装 Cockpit 及其依赖
 RUN apt-get update && \
-    apt-get install -y cockpit sudo dbus && \
+    apt-get install -y cockpit sudo dbus systemd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 启动 Cockpit Web 服务
-CMD ["cockpit-ws", "--no-tls"]
+# 启用并启动 cockpit 服务
+RUN systemctl enable cockpit.socket
+
+# 使用 systemd 作为默认命令
+CMD ["/sbin/init"]
