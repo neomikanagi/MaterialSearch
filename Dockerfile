@@ -1,9 +1,12 @@
-# 使用官方 Debian 作为基础镜像
-FROM debian:latest
+# 使用官方的 Alpine 作为基础镜像
+FROM alpine:latest
 
-# 更新系统并安装 Cockpit 和其他依赖
-RUN apt-get update && \
-    apt-get install -y cockpit sudo dbus
+# 安装 cockpit 的依赖项
+RUN apk update && \
+    apk add --no-cache cockpit ws sudo dbus shadow
 
-# 替代 systemd，直接启动 cockpit
+# 创建一个用户，以防 Cockpit 需要一个非 root 用户运行
+RUN adduser -D cockpit && echo "cockpit:cockpit" | chpasswd && adduser cockpit wheel
+
+# 启动 Cockpit Web 服务
 CMD ["cockpit-ws", "--no-tls"]
