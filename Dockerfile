@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:stable-slim
 
 # 安装 Cockpit 及其依赖
 RUN apt-get update && \
